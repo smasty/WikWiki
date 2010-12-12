@@ -1,5 +1,5 @@
 Inspired by ShortestWikiContest(1), I've created WikWiki from scratch.
-It's 1281 characters long (17 lines) and written in PHP. WikiPrinciples(2) are obeyed.
+It's 1287 characters long (17 lines) and written in PHP. WikiPrinciples(2) are obeyed.
 
 Working demo: http://labs.smasty.net/WikWiki
 Highlighted & formatted source: http://labs.smasty.net/WikWiki/code.html
@@ -13,6 +13,7 @@ Features
   - Dash on a new line followed by space creates list item
   - New line creates <br> tag
   - URLs starting by http(s) are converted to links
+  - Space indented line is monospaced
 - BackLinks(5) support
 
 Installation
