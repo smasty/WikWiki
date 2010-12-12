@@ -7,7 +7,7 @@ Highlighted & formatted source: http://labs.smasty.net/WikWiki/code.html
 Features
 ========
 
-- AutomaticLinkGeneration(3) - Same behaviour as on this site
+- AutomaticLinkGeneration(3) - Same behaviour as on c2.com/wiki
 - EasyTextInput(4)
   - Four or more dash characters create horizontal rule
   - Dash on a new line followed by space creates list item
