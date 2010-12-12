@@ -24,4 +24,4 @@ No special installation is required, just copy the source.
 (2) http://c2.com/cgi/wiki?WikiPrinciples
 (3) http://c2.com/cgi/wiki?AutomaticLinkGeneration
 (4) http://c2.com/cgi/wiki?EasyTextInput
-(5) http://c2.com/cgi/wiki?BackLinks
+(5) http://c2.com/cgi/wiki?BackLink
