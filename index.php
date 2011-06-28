@@ -49,7 +49,7 @@ if(!empty($_POST)){
 
 
 // Edit/create page
-if(isset($_GET['edit'])){
+if(array_key_exists('edit', $_GET)){
 	$title = idToTitle($_GET['edit']);
 	printHeader(!$title ? "Create new page" : "Edit page '$title'");
 	printEdit($title);
@@ -158,7 +158,7 @@ function printHeader($page = BASE_PAGE){
 	global $msg;
     $message = $msg ? "<div class=\"msg\">$msg</div>" : '';
 	$html_title = "$page | " . PAGE_TITLE;
-	
+
 	echo <<<PAGE_HEAD
 <!DOCTYPE html>
 <html>
