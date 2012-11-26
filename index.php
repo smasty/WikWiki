@@ -6,6 +6,10 @@
  * Licensed under the terms and conditions of
  * the GNU GPL License (http://www.gnu.org/licenses/gpl.html)
  */
+if (file_exists('captcha_codes.php')) {
+    require('captcha_codes.php');
+    require_once('recaptchalib.php');
+}
 
 define('PAGE_TITLE', 'WikWiki');
 define('BASE_PAGE', 'Home Page');
@@ -42,9 +46,27 @@ if(empty($_GET)){
 
 // Save content.
 if(!empty($_POST)){
-	if(!savePageContent($_POST)){
-		$msg = 'Edit failed. Please, try again.';
-	}
+    
+    if (file_exists('captcha_codes.php')) {
+        $resp = recaptcha_check_answer(get_private_recaptcha_key(),
+            $_SERVER["REMOTE_ADDR"],
+            $_POST["recaptcha_challenge_field"],
+            $_POST["recaptcha_response_field"]);
+
+
+        $accepted=$resp->is_valid;
+    } else {
+        $accepted=1;
+    }
+
+    if (!$accepted) {
+        $msg = "Not a correct reCaptcha.";
+    } else {
+
+    	if(!savePageContent($_POST)){
+	    	$msg = 'Edit failed. Please, try again.';
+	    }
+    }
 }
 
 
@@ -265,7 +287,11 @@ function printEdit($page){
 			$content = getContent($page);
 		}
 	}
-
+    if (file_exists('captcha_codes.php')) {
+        $recaptcha=recaptcha_get_html(get_public_recaptcha_key());
+    } else {
+        $recaptcha="";
+    }
 	echo <<<EDIT_FORM
 <form action="./?edit=$id" method="post" id="edit-form">
   <p id="edit-block-title" class="edit-block">
@@ -276,6 +302,7 @@ function printEdit($page){
     <label for="edit-content">Content:</label>
     <textarea name="content" id="edit-content" rows="15" cols="80">$content</textarea>
   </div>
+  $recaptcha
   <p id="edit-block-submit" class="edit-block">
     <button type="submit">Save changes</button>
 	<a href="./?$id">Cancel</a>

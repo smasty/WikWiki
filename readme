@@ -2,9 +2,13 @@ WikWiki - simple wiki in one PHP file.
 **************************************
 
 Copyright (c) 2012 Smasty, http://smasty.net
+Recaptcha copyright (c) 2007 reCAPTCHA -- http://recaptcha.net
+Recaptcha implemented by Karel Bilek http://karelbilek.com
 
 Licensed under the terms and conditions of
 the MIT License (http://www.opensource.org/licenses/mit-license.php)
+
+Recaptcha licence in RECAPTCHA_LICENSE
 
 Features
 ========
@@ -25,3 +29,7 @@ desired folder.
 
 Make sure that PHP has write access to the folder. WikWiki will try to create
 a data folder automatically. If it fails, you'll be asked to create it manually.
+
+For installation of ReCaptcha, write your public and secret key to
+_captcha_codes.php and remove the first underscore in the filename. If you
+won't do this, no reCapcha is used.
