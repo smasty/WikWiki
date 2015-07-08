@@ -21,6 +21,9 @@ if(!@file_exists(dirname(__FILE__) . '/wikdata') || !@is_writable(dirname(__FILE
     }
 }
 
+// Set timezone while suppressing date.timezone warning.
+date_default_timezone_set( @date_default_timezone_get() );
+
 $msg = '';
 
 // Instantiate Texy parser.
