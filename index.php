@@ -14,11 +14,11 @@ define('FOOTER_TEXT', 'Copyright %Y Martin Šrank. | Powered by <a href="http://
 @set_magic_quotes_runtime(false);
 
 if(!@file_exists(dirname(__FILE__) . '/wikdata') || !@is_writable(dirname(__FILE__) . '/wikdata')){
-	$ok = @mkdir(dirname(__FILE__) . '/wikdata');
-	if(!$ok){
-		die('WikWiki cannot access the data directory ./wikdata/.
-			 Please create the directory and make it writeable by PHP.');
-	}
+    $ok = @mkdir(dirname(__FILE__) . '/wikdata');
+    if(!$ok){
+        die('WikWiki cannot access the data directory ./wikdata/.
+             Please create the directory and make it writeable by PHP.');
+    }
 }
 
 $msg = '';
@@ -34,62 +34,64 @@ $texy->registerLinePattern('parseWikiLinks', '~\[([^|\]]+)(?:\s*\|\s*([^\]]+)\s*
 
 
 // init path
-$page = parseQueryString($_SERVER['QUERY_STRING']);
+$page = parseQueryString(@$_SERVER['QUERY_STRING']);
 if(empty($_GET)){
-	$page = titleToId(BASE_PAGE);
+    $page = titleToId(BASE_PAGE);
 }
 
 
 // Save content.
 if(!empty($_POST)){
-	if(!savePageContent($_POST)){
-		$msg = 'Edit failed. Please, try again.';
-	}
+    if(!savePageContent($_POST)){
+        $msg = 'Edit failed. Please, try again.';
+    }
 }
 
 
 // Edit/create page
 if(array_key_exists('edit', $_GET)){
-	$title = idToTitle($_GET['edit']);
-	printHeader(!$title ? "Create new page" : "Edit page '$title'");
-	printEdit($title);
-	printFooter($title);
-	exit;
+    $title = idToTitle($_GET['edit']);
+    printHeader(!$title ? "Create new page" : "Edit page '$title'");
+    printEdit($title);
+    printFooter($title);
+    exit;
 }
 
 
 // Backlinks
 elseif(isset($_GET['backlinks']) && pageExists($_GET['backlinks'])){
-	$title = idToTitle($_GET['backlinks']);
-	printHeader("Backlinks for '$title'");
-	printBacklinks($title);
-	printFooter($title);
-	exit;
+    $title = idToTitle($_GET['backlinks']);
+    printHeader("Backlinks for '$title'");
+    printBacklinks($title);
+    printFooter($title);
+    exit;
 }
 
 
 elseif(isset($_GET['recent'])){
-	$count = $_GET['recent'];
-	if(!is_numeric($count)){
-		$count = 10;
-	}
-	printHeader("$count Most Recent Changes");
-	printRecentChanges($count);
-	printFooter();
+    $count = $_GET['recent'];
+    if(!is_numeric($count)){
+        $count = 10;
+    }
+    printHeader("$count Most Recent Changes");
+    printRecentChanges($count);
+    printFooter();
+    exit;
 }
 
 
 // Show page
 elseif($page){
-	$title = idToTitle($page);
-	printHeader($title);
-	printContent($title);
-	printFooter($title);
-	exit;
+    $title = idToTitle($page);
+    printHeader($title);
+    printContent($title);
+    printFooter($title);
+    exit;
 }
 
 else{
-	header('Location: ./?Special:NotFound');
+    header('Location: ./?Special:NotFound');
+    exit;
 }
 
 
@@ -100,7 +102,7 @@ else{
  * @return strng|false
  */
 function parseQueryString($queryString){
-	return preg_match('~\w+=.*~', $queryString) ? false : $queryString;
+    return preg_match('~\w+=.*~', $queryString) ? false : $queryString;
 }
 
 
@@ -113,19 +115,19 @@ function parseQueryString($queryString){
  */
 function parseWikiLinks($parser, $matches, $name){
 
-	$page = trim($matches[1]);
-	$id = titleToId($matches[1]);
+    $page = trim($matches[1]);
+    $id = titleToId($matches[1]);
 
-	$el = TexyHtml::el('a')
-		->href("?$id")
-		->setText(isset($matches[2]) ? $matches[2] : $page);
+    $el = TexyHtml::el('a')
+        ->href("?$id")
+        ->setText(isset($matches[2]) ? $matches[2] : $page);
 
-	if(!pageExists($page)){
-		$el->class = 'new';
-		$el->title = "Create page '$page'";
-		$el->href("?edit=$id");
-	}
-	return $el;
+    if(!pageExists($page)){
+        $el->class = 'new';
+        $el->title = "Create page '$page'";
+        $el->href("?edit=$id");
+    }
+    return $el;
 }
 
 
@@ -135,7 +137,7 @@ function parseWikiLinks($parser, $matches, $name){
  * @return string
  */
 function titleToId($title){
-	return preg_replace('~\s+~i', '_', trim($title));
+    return preg_replace('~\s+~i', '_', trim($title));
 }
 
 
@@ -145,7 +147,7 @@ function titleToId($title){
  * @return string
  */
 function idToTitle($id){
-	return str_replace('_', ' ', $id);
+    return str_replace('_', ' ', $id);
 }
 
 
@@ -155,11 +157,11 @@ function idToTitle($id){
  * @return void
  */
 function printHeader($page = BASE_PAGE){
-	global $msg;
+    global $msg;
     $message = $msg ? "<div class=\"msg\">$msg</div>" : '';
-	$html_title = "$page | " . PAGE_TITLE;
+    $html_title = "$page | " . PAGE_TITLE;
 
-	echo <<<PAGE_HEAD
+    echo <<<PAGE_HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -170,8 +172,8 @@ function printHeader($page = BASE_PAGE){
 <body>
   <div id="container">
     <div id="main">
-	$message
-	<h1>$page</h1>
+    $message
+    <h1>$page</h1>
     <div id="content">
 PAGE_HEAD;
 }
@@ -183,15 +185,15 @@ PAGE_HEAD;
  * @return void
  */
 function printFooter($page = BASE_PAGE){
-	$sidebar = getSidebar($page);
-	$footer = strftime(FOOTER_TEXT);
-	echo <<<PAGE_FOOT
+    $sidebar = getSidebar($page);
+    $footer = strftime(FOOTER_TEXT);
+    echo <<<PAGE_FOOT
       </div>
     </div>
     <div id="sidebar">
     $sidebar
     </div>
-	<div id="footer">
+    <div id="footer">
     $footer
     </div>
   </div>
@@ -207,17 +209,17 @@ PAGE_FOOT;
  * @return void
  */
 function getSidebar($page = BASE_PAGE){
-	$title = PAGE_TITLE;
-	$id = titleToId($page);
-	$mod = 'not yet.';
-	$toc = $bl = '';
-	if(pageExists($page)){
-		$mod = date('d.m.Y, H:i:s', filemtime(getFilePath($page)));
-		$toc = generateToc();
-		$bl = "<li class=\"backlinks\"><a href=\"./?backlinks=$id\">Backlinks</a></li>";
-	}
+    $title = PAGE_TITLE;
+    $id = titleToId($page);
+    $mod = 'not yet.';
+    $toc = $bl = '';
+    if(pageExists($page)){
+        $mod = date('d.m.Y, H:i:s', filemtime(getFilePath($page)));
+        $toc = generateToc();
+        $bl = "<li class=\"backlinks\"><a href=\"./?backlinks=$id\">Backlinks</a></li>";
+    }
 
-	return <<<PAGE_SIDEBAR
+    return <<<PAGE_SIDEBAR
 <p id="title"><a href="./">$title</a></p>
 
 <ul class="sidebar-list">
@@ -239,15 +241,15 @@ PAGE_SIDEBAR;
  * @return void
  */
 function printContent($page = BASE_PAGE){
-	global $texy;
-	if(pageExists($page)){
-		echo $texy->process(getContent($page));
-	} elseif(pageExists('Special:NotFound')){
-		echo $texy->process(str_replace('%PAGE%', $page, getContent('Special:NotFound')));
-	} else{
-		echo $texy->process("The page you're looking for does not exist at the moment. "
-			. "However, you can [$page | create it] right now.");
-	}
+    global $texy;
+    if(pageExists($page)){
+        echo $texy->process(getContent($page));
+    } elseif(pageExists('Special:NotFound')){
+        echo $texy->process(str_replace('%PAGE%', $page, getContent('Special:NotFound')));
+    } else{
+        echo $texy->process("The page you're looking for does not exist at the moment. "
+            . "However, you can [$page | create it] right now.");
+    }
 }
 
 
@@ -257,16 +259,16 @@ function printContent($page = BASE_PAGE){
  * @return void
  */
 function printEdit($page){
-	$title = $content = $id = '';
-	if($page){
-		$title = $page;
-		$id = titleToId($page);
-		if(pageExists($page)){
-			$content = getContent($page);
-		}
-	}
+    $title = $content = $id = '';
+    if($page){
+        $title = $page;
+        $id = titleToId($page);
+        if(pageExists($page)){
+            $content = getContent($page);
+        }
+    }
 
-	echo <<<EDIT_FORM
+    echo <<<EDIT_FORM
 <form action="./?edit=$id" method="post" id="edit-form">
   <p id="edit-block-title" class="edit-block">
     <label for="edit-title">Page:</label>
@@ -278,11 +280,11 @@ function printEdit($page){
   </div>
   <p id="edit-block-submit" class="edit-block">
     <button type="submit">Save changes</button>
-	<a href="./?$id">Cancel</a>
+    <a href="./?$id">Cancel</a>
   </p>
   <p id="edit-block-help" class="edit-block">
     You can use <a href="http://texy.info/en/syntax">Texy! syntax</a> and some HTML too.<br>
-	<small>Use [Sample Page] to link to "Sample Page". Use [Sample Page | link to sample] for custom label.</small>
+    <small>Use [Sample Page] to link to "Sample Page". Use [Sample Page | link to sample] for custom label.</small>
 </form>
 EDIT_FORM;
 }
@@ -295,24 +297,24 @@ EDIT_FORM;
  * @return void
  */
 function printBacklinks($page){
-	global $texy;
-	$s = "[$page | Go back to page]
+    global $texy;
+    $s = "[$page | Go back to page]
 
-	This is a list of all pages that link to [$page].\n";
+    This is a list of all pages that link to [$page].\n";
 
-	$l = array();
-	foreach(new FilesystemIterator(dirname(__FILE__) . '/wikdata', FilesystemIterator::SKIP_DOTS) as $file){
-		if(checkBacklink($file, $page)){
-			$l[] = "- [" . fileToTitle($file) . "]";
-		}
-	}
-	if(empty($l)){
-		$s .= "\nNo backlinks found.";
-	} else{
-		$s .= ".[#backlinks-list]\n" . implode("\n", $l);
-	}
+    $l = array();
+    foreach(new FilesystemIterator(dirname(__FILE__) . '/wikdata', FilesystemIterator::SKIP_DOTS) as $file){
+        if(checkBacklink($file, $page)){
+            $l[] = "- [" . fileToTitle($file) . "]";
+        }
+    }
+    if(empty($l)){
+        $s .= "\nNo backlinks found.";
+    } else{
+        $s .= ".[#backlinks-list]\n" . implode("\n", $l);
+    }
 
-	echo $texy->process($s);
+    echo $texy->process($s);
 }
 
 
@@ -323,8 +325,8 @@ function printBacklinks($page){
  * @return string
  */
 function checkBacklink($file, $page){
-	$c = file_get_contents($file);
-	return preg_match("~\[$page(\s*\|\s*[^\w]*)?]~m", $c);
+    $c = file_get_contents($file);
+    return preg_match("~\[$page(\s*\|\s*[^\w]*)?]~m", $c);
 }
 
 
@@ -334,7 +336,7 @@ function checkBacklink($file, $page){
  * @return string
  */
 function fileToTitle($file){
-	return idToTitle(pathinfo($file, PATHINFO_FILENAME));
+    return idToTitle(pathinfo($file, PATHINFO_FILENAME));
 }
 
 
@@ -345,20 +347,20 @@ function fileToTitle($file){
  * @return void
  */
 function printRecentChanges($count){
-	global $texy;
-	$list = array();
-	foreach(new FilesystemIterator(dirname(__FILE__) . '/wikdata', FilesystemIterator::SKIP_DOTS) as $file){
-		$list[filemtime($file)] = fileToTitle($file);
-	}
-	krsort($list);
+    global $texy;
+    $list = array();
+    foreach(new FilesystemIterator(dirname(__FILE__) . '/wikdata', FilesystemIterator::SKIP_DOTS) as $file){
+        $list[filemtime($file)] = fileToTitle($file);
+    }
+    krsort($list);
 
-	$list = array_slice($list, 0, $count, true);
-	$s = '';
-	foreach($list as $t => $l){
-		$s .= "\n- [$l] (" . date("d.m.Y, H:i:s", $t) . ")";
-	}
+    $list = array_slice($list, 0, $count, true);
+    $s = '';
+    foreach($list as $t => $l){
+        $s .= "\n- [$l] (" . date("d.m.Y, H:i:s", $t) . ")";
+    }
 
-	echo $texy->process($s);
+    echo $texy->process($s);
 
 }
 
@@ -369,7 +371,7 @@ function printRecentChanges($count){
  * @return string
  */
 function getFilePath($page){
-	return dirname(__FILE__) . '/wikdata/' . titleToId($page) . '.wik';
+    return dirname(__FILE__) . '/wikdata/' . titleToId($page) . '.wik';
 }
 
 
@@ -379,8 +381,8 @@ function getFilePath($page){
  * @return bool
  */
 function pageExists($page){
-	$path = getFilePath($page);
-	return file_exists($path) && is_readable($path);
+    $path = getFilePath($page);
+    return file_exists($path) && is_readable($path);
 }
 
 
@@ -390,11 +392,11 @@ function pageExists($page){
  * @return string|false
  */
 function getContent($page){
-	$path = getFilePath($page);
-	if(pageExists($page)){
-		return file_get_contents($path);
-	}
-	return false;
+    $path = getFilePath($page);
+    if(pageExists($page)){
+        return file_get_contents($path);
+    }
+    return false;
 }
 
 
@@ -404,19 +406,19 @@ function getContent($page){
  * @return bool
  */
 function savePageContent($fields){
-	if(@get_magic_quotes_gpc()){
-		$fields = array_map(stripslashes, $fields);
-	}
+    if(@get_magic_quotes_gpc()){
+        $fields = array_map(stripslashes, $fields);
+    }
 
-	$file = getFilePath($fields['title']);
+    $file = getFilePath($fields['title']);
 
-	$do = file_put_contents($file, trim($fields['content']));
-	if($do){
-		header("Location: ./?" . titleToId($fields['title']));
-		exit;
-	} else{
-		return false;
-	}
+    $do = file_put_contents($file, trim($fields['content']));
+    if($do){
+        header("Location: ./?" . titleToId($fields['title']));
+        exit;
+    } else{
+        return false;
+    }
 }
 
 
@@ -426,41 +428,41 @@ function savePageContent($fields){
  * @return TexyHtml
  */
 function generateToc(){
-	global $texy;
-	if(!$texy->headingModule->TOC){
-		return '';
-	}
-	$block = TexyHTML::el('div');
-	$block->id = 'toc';
-	$block->create('h3', 'Contents');
-	$toc = TexyHTML::el('ul');
-	$block->add($toc);
-	$lists[0] = $toc;
-	$aList = 0;
-	$level = 2;
+    global $texy;
+    if(!$texy->headingModule->TOC){
+        return '';
+    }
+    $block = TexyHTML::el('div');
+    $block->id = 'toc';
+    $block->create('h3', 'Contents');
+    $toc = TexyHTML::el('ul');
+    $block->add($toc);
+    $lists[0] = $toc;
+    $aList = 0;
+    $level = 2;
 
-	foreach($texy->headingModule->TOC as $heading){
-		if($heading['level'] > $level){
-			for($level; $heading['level'] > $level; ++$level){
-				if($lists[$aList]->count() != 0){
-					$ul = $lists[$aList][$lists[$aList]->count() - 1]->create('ul');
-				} else{
-					$li = $lists[$aList]->create('li');
-					$ul = $li->create('ul');
-				}
-				$lists[] = $ul;
-			}
-			$aList = count($lists) - 1;
-		} elseif($heading['level'] < $level){
-			$diff = $level - $heading['level'];
+    foreach($texy->headingModule->TOC as $heading){
+        if($heading['level'] > $level){
+            for($level; $heading['level'] > $level; ++$level){
+                if($lists[$aList]->count() != 0){
+                    $ul = $lists[$aList][$lists[$aList]->count() - 1]->create('ul');
+                } else{
+                    $li = $lists[$aList]->create('li');
+                    $ul = $li->create('ul');
+                }
+                $lists[] = $ul;
+            }
+            $aList = count($lists) - 1;
+        } elseif($heading['level'] < $level){
+            $diff = $level - $heading['level'];
 
-			$lists = array_slice($lists, 0, - $diff);
+            $lists = array_slice($lists, 0, - $diff);
 
-			$level = $heading['level'];
-		}
-		$aList = count($lists) - 1;
-		$li = $lists[$aList]->create('li');
-		$a = $li->create('a')->href('#' . $heading['el']->attrs['id'])->setText($heading['title']);
-	}
-	return $block->toHtml($texy);
+            $level = $heading['level'];
+        }
+        $aList = count($lists) - 1;
+        $li = $lists[$aList]->create('li');
+        $a = $li->create('a')->href('#' . $heading['el']->attrs['id'])->setText($heading['title']);
+    }
+    return $block->toHtml($texy);
 }
