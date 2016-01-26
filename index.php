@@ -4,12 +4,12 @@
  * Copyright (c) 2011 Martin Srank, http://smasty.net
  *
  * Licensed under the terms and conditions of
- * the GNU GPL License (http://www.gnu.org/licenses/gpl.html)
+ * the MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 define('PAGE_TITLE', 'WikWiki');
 define('BASE_PAGE', 'Home Page');
-define('FOOTER_TEXT', 'Copyright %Y Martin Šrank. | Powered by <a href="http://smasty.net/wikwiki">WikWiki</a>.');
+define('FOOTER_TEXT', 'Copyright %Y Martin Srank. | Powered by <a href="https://github.com/smasty/WikWiki">WikWiki</a>.');
 
 @set_magic_quotes_runtime(false);
 
