@@ -1,16 +1,11 @@
-WikWiki - simple wiki in one PHP file.
-**************************************
+# WikWiki - simple wiki in one PHP file.
 
-Homepage: http://smasty.nt/wikwiki
-Live demo: http://labs.smasty.net/WikWiki/v2/
-
-Copyright (c) 2011 Martin Srank, http://smasty.net
+Copyright (c) 2015 Martin Srank, http://smasty.net
 
 Licensed under the terms and conditions of
-the GNU GPL License (http://www.gnu.org/licenses/gpl.html)
+the MIT License (http://www.opensource.org/licenses/mit-license.php)
 
-Features
-========
+## Features
 
 - Advanced formattng options (using Texy! syntax)
 - Backlinks support
@@ -19,8 +14,7 @@ Features
                      Use %PAGE% as a placeholer for name of not found page.
 
 
-Installation
-============
+## Installation
 
 No special installation steps are required. Just copy the source file (index.php),
 the Texy! formatter file (texy.min.php) and the stylesheet (style.css) to your
